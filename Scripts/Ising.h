@@ -7,7 +7,7 @@ private:
 
 public:
     //Ising(int L);
-    int TotalEnergy(int);
+    double TotalEnergy(int, double);
     /*void MeanEnergy();
     void MeanMagnetization();
     void SpesificHeat();

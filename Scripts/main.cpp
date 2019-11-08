@@ -7,6 +7,7 @@ int main()
 {
    Ising * Is = new Ising;
 
-   Is->TotalEnergy(3);
+   double val = Is->TotalEnergy(3, 1);
+   cout << "total energy: " << val << " J" << endl;
    return 0; 
 }
