@@ -5,9 +5,11 @@ using namespace std;
 
 int main()
 {
-   Ising * Is = new Ising;
+   Ising Is = Ising();
 
-   double val = Is->TotalEnergy(1);
+   double val = Is.TotalEnergy(1);
    cout << "total energy: " << val << " J" << endl;
+
+   Is.Metropolis();
    return 0; 
 }

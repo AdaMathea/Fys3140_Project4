@@ -112,7 +112,8 @@ void Ising::Metropolis()
 {
     random_device rd;  //Will be used to obtain a seed for the random number engine
     mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-    uniform_int_distribution<int> dis(0, this->N);
+    uniform_int_distribution<int> dis(0, this->N-1);
+    uniform_real_distribution<double> one_dis(0, 1);
 
     int J = this->J;
     int N2 = this->N*this->N;
@@ -122,11 +123,69 @@ void Ising::Metropolis()
         int b = dis(gen);
         index[i] = {a, b};
     }
-    lattice[index[0].first][index[0].second];
     //W poop(this->J);
+    double count = 0;
+    double deltaEcalc;
     for(int i = 0; i < N2; i++) {
-        double deltaEcalc = 2*J*lattice[index[i].first][index[i].second]*
-        (lattice[index[i-1].first][index[i].second]+lattice[index[i+1].first][index[i].second]+
-        lattice[index[i].first][index[i-1].second]+lattice[index[i].first][index[i+1].second]);
+        if(index[i].first==0 and index[i].second==0) {
+            //cout << "1" << endl;
+            deltaEcalc = 2*J*lattice[index[i].first][index[i].second]*
+            (lattice[this->N-1][index[i].second]+lattice[index[i].first+1][index[i].second]+
+            lattice[index[i].first][this->N-1]+lattice[index[i].first][index[i].second+1]);
+        }
+        else if(index[i].first==this->N-1 and index[i].second==0) {
+            //cout << "2" << endl;
+            deltaEcalc = 2*J*lattice[index[i].first][index[i].second]*
+            (lattice[index[i].first-1][index[i].second]+lattice[0][index[i].second]+
+            lattice[index[i].first][this->N]+lattice[index[i].first][index[i].second+1]);
+        }
+        else if(index[i].first==0 and index[i].second==this->N-1) {
+            //cout << "2" << endl;
+            deltaEcalc = 2*J*lattice[index[i].first][index[i].second]*
+            (lattice[this->N-1][index[i].second]+lattice[index[i].first+1][index[i].second]+
+            lattice[index[i].first][index[i].second-1]+lattice[index[i].first][0]);
+        }
+        else if(index[i].first==0) {
+            //cout << "1" << endl;
+            deltaEcalc = 2*J*lattice[index[i].first][index[i].second]*
+            (lattice[this->N-1][index[i].second]+lattice[index[i].first+1][index[i].second]+
+            lattice[index[i].first][index[i].second-1]+lattice[index[i].first][index[i].second+1]);
+        }
+        else if(index[i].second==0) {
+            deltaEcalc = 2*J*lattice[index[i].first][index[i].second]*
+            (lattice[index[i].first-1][index[i].second]+lattice[index[i].first+1][index[i].second]+
+            lattice[index[i].first][this->N-1]+lattice[index[i].first][index[i].second+1]);
+        }
+        else if(index[i].first==this->N-1 and index[i].second==this->N-1) {
+            //cout << "2" << endl;
+            deltaEcalc = 2*J*lattice[index[i].first][index[i].second]*
+            (lattice[index[i].first-1][index[i].second]+lattice[0][index[i].second]+
+            lattice[index[i].first][index[i].second-1]+lattice[index[i].first][0]);
+        }
+        else if(index[i].first==this->N-1) {
+            //cout << "1" << endl;
+            deltaEcalc = 2*J*lattice[index[i].first][index[i].second]*
+            (lattice[index[i].first-1][index[i].second]+lattice[0][index[i].second]+
+            lattice[index[i].first][index[i].second-1]+lattice[index[i].first][index[i].second+1]);
+        }
+        else if(index[i].second==this->N-1) {
+            deltaEcalc = 2*J*lattice[index[i].first][index[i].second]*
+            (lattice[index[i].first-1][index[i].second]+lattice[index[i].first+1][index[i].second]+
+            lattice[index[i].first][index[i].second-1]+lattice[index[i].first][0]);
+        }
+        else {
+            //cout << "3" << endl;
+            deltaEcalc = 2*J*lattice[index[i].first][index[i].second]*
+            (lattice[index[i].first-1][index[i].second]+lattice[index[i].first+1][index[i].second]+
+            lattice[index[i].first][index[i].second-1]+lattice[index[i].first][index[i].second+1]);
+        }
+
+        if(deltaEcalc <= 0) {
+            lattice[index[i].first][index[i].second] *= -1;
+        }
+        else {
+            double r = one_dis(gen);
+            cout << r << endl;
+        }
     }
 }
