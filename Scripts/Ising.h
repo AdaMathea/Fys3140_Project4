@@ -8,11 +8,14 @@ class Ising {
         int N;
         double J;
     public:
+        double avg;
+        double T;
+        double E_tot;
         Ising();
         Ising(int N);
         ~Ising();
         double TotalEnergy(double);
-        void Metropolis();
+        void Metropolis(int);
         /*void MeanEnergy();
         void MeanMagnetization();
         void SpesificHeat();
