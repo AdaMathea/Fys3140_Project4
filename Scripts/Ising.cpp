@@ -23,6 +23,10 @@ Ising::~Ising() {
     delete this->lattice;
 }
 
+inline int periodic(int i, int limit, int add) {
+    return (i+limit+add) % (limit);
+}
+
 void Ising::CreateLattice(const int N) {
     random_device rd;  //Will be used to obtain a seed for the random number engine
     mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
@@ -34,90 +38,26 @@ void Ising::CreateLattice(const int N) {
         this->lattice[i] = new int[N];
         for(int j = 0; j < N; j++){
             this->lattice[i][j] = dis(gen)*2-1;
+            //this->lattice[i][j] = 1;
         }
     }
+    cout << this->lattice[0][0] << this->lattice[1][0] << endl;
+    cout << this->lattice[0][1] << this->lattice[1][1] << endl;
 }
 
-double Ising::TotalEnergy(double J)
-{
+//Initialice total energy
+double Ising::TotalEnergy(double J) {
     this->J = J;
     int N = this->N;
-    for(int i = 0; i < N; i += 2){
-        for(int j = 0; j < N; j += 2){
-            double E_step = 0;
-            //sum with boundary conditions
-            if(i == 0){
-                E_step += lattice[N-1][j];
-            }
-            else{
-                E_step += lattice[i-1][j];
-            }
-            if(j == 0){
-                E_step += lattice[i][N-1];
-            }
-            else{
-                E_step += lattice[i][j-1];
-            }
-            if(i == N-1){
-                E_step += lattice[0][j];
-            }
-            else{
-                E_step += lattice[i+1][j];
-            }
-            if(j == N-1){
-                E_step += lattice[i][0];
-            }
-            else{
-                E_step += lattice[i][j+1];
-            }
-            this->E_tot = J*(E_tot + E_step);
-            }
-         }
-
-    for(int i = 1; i < N; i += 2){
-        for(int j = 1; j < N; j += 2){
-            double E_step = 0;
-            E_step += lattice[i-1][j];
-            E_step += lattice[i][j-1];
-            if(i == N-1){
-                E_step += lattice[0][j];
-            }
-            else{
-                E_step += lattice[i+1][j];
-            }
-            if(j == N-1){
-                E_step += lattice[i][0];
-            }
-            else{
-                E_step += lattice[i][j+1];
-            }
-            this->E_tot = J*(E_tot + E_step);
+    double E_step = 0;
+    for(int i = 0; i < N; i++) {
+        for(int j = 0; j < N; j++) {
+            E_step += lattice[i][j]*lattice[i][periodic(j,N,-1)];
+            E_step += lattice[i][j]*lattice[periodic(i,N,-1)][j];
         }
     }
-    return this->E_tot;
+    this->E_tot = E_step*(-J);
 }
-
-struct deltaE{
-    double data[5];
-    deltaE(double J) {
-        data[0] = 8*J;
-        data[1] = 4*J;
-        data[2] = 0;
-        data[3] = -4*J;
-        data[4] = -8*J;
-    }
-};
-
-struct W{
-    double w[5];
-    W(double J, double T){
-        w[0] = exp((1/T*k_b)*8*J);
-        w[1] = exp((1/T*k_b)*4*J);
-        w[2] = 1;
-        w[3] = exp((1/T*k_b)*-4*J);
-        w[4] = exp((1/T*k_b)*-8*J);
-    }
-};
 
 void Ising::Metropolis(int cycles) {
 
@@ -126,7 +66,7 @@ void Ising::Metropolis(int cycles) {
     uniform_int_distribution<int> dis(0, this->N-1);
     uniform_real_distribution<double> one_dis(0, 1);
 
-    double E = this->E_tot;
+    double E = 0;
     int J = this->J;
     int T = this->T;
     int N2 = this->N*this->N;
@@ -136,95 +76,47 @@ void Ising::Metropolis(int cycles) {
         int b = dis(gen);
         index[i] = {a, b};
     }
-    W W(J, T);
-    deltaE deltaE(J);
-    cout << E << endl;
     double deltaEcalc;
     for(int l = 0; l < cycles; l++) {
         for(int i = 0; i < N2; i++) {
-            if(index[i].first==0 and index[i].second==0) {
-                //cout << "1" << endl;
-                deltaEcalc = 2*J*lattice[index[i].first][index[i].second]*
-                (lattice[this->N-1][index[i].second]+lattice[index[i].first+1][index[i].second]+
-                lattice[index[i].first][this->N-1]+lattice[index[i].first][index[i].second+1]);
-            }
-            else if(index[i].first==this->N-1 and index[i].second==0) {
-                //cout << "2" << endl;
-                deltaEcalc = 2*J*lattice[index[i].first][index[i].second]*
-                (lattice[index[i].first-1][index[i].second]+lattice[0][index[i].second]+
-                lattice[index[i].first][this->N]+lattice[index[i].first][index[i].second+1]);
-            }
-            else if(index[i].first==0 and index[i].second==this->N-1) {
-                //cout << "2" << endl;
-                deltaEcalc = 2*J*lattice[index[i].first][index[i].second]*
-                (lattice[this->N-1][index[i].second]+lattice[index[i].first+1][index[i].second]+
-                lattice[index[i].first][index[i].second-1]+lattice[index[i].first][0]);
-            }
-            else if(index[i].first==0) {
-                //cout << "1" << endl;
-                deltaEcalc = 2*J*lattice[index[i].first][index[i].second]*
-                (lattice[this->N-1][index[i].second]+lattice[index[i].first+1][index[i].second]+
-                lattice[index[i].first][index[i].second-1]+lattice[index[i].first][index[i].second+1]);
-            }
-            else if(index[i].second==0) {
-                deltaEcalc = 2*J*lattice[index[i].first][index[i].second]*
-                (lattice[index[i].first-1][index[i].second]+lattice[index[i].first+1][index[i].second]+
-                lattice[index[i].first][this->N-1]+lattice[index[i].first][index[i].second+1]);
-            }
-            else if(index[i].first==this->N-1 and index[i].second==this->N-1) {
-                //cout << "2" << endl;
-                deltaEcalc = 2*J*lattice[index[i].first][index[i].second]*
-                (lattice[index[i].first-1][index[i].second]+lattice[0][index[i].second]+
-                lattice[index[i].first][index[i].second-1]+lattice[index[i].first][0]);
-            }
-            else if(index[i].first==this->N-1) {
-                //cout << "1" << endl;
-                deltaEcalc = 2*J*lattice[index[i].first][index[i].second]*
-                (lattice[index[i].first-1][index[i].second]+lattice[0][index[i].second]+
-                lattice[index[i].first][index[i].second-1]+lattice[index[i].first][index[i].second+1]);
-            }
-            else if(index[i].second==this->N-1) {
-                deltaEcalc = 2*J*lattice[index[i].first][index[i].second]*
-                (lattice[index[i].first-1][index[i].second]+lattice[index[i].first+1][index[i].second]+
-                lattice[index[i].first][index[i].second-1]+lattice[index[i].first][0]);
-            }
-            else {
-                //cout << "3" << endl;
-                deltaEcalc = 2*J*lattice[index[i].first][index[i].second]*
-                (lattice[index[i].first-1][index[i].second]+lattice[index[i].first+1][index[i].second]+
-                lattice[index[i].first][index[i].second-1]+lattice[index[i].first][index[i].second+1]);
-            }
+            int deltaEcalc = 2*lattice[index[i].first][index[i].second]*
+            (lattice[index[i].first][periodic(index[i].second,N,-1)]+
+            lattice[periodic(index[i].first,N,-1)][index[i].second] +
+            lattice[index[i].first][periodic(index[i].second,N,1)] +
+            lattice[periodic(index[i].first,N,1)][index[i].second]);
+            //cout << "delta: " << deltaEcalc << " val: " << lattice[index[i].first][index[i].second] << endl;
 
             if(deltaEcalc <= 0) {
-                //cout << "1" << endl;
                 lattice[index[i].first][index[i].second] *= -1;
                 E += deltaEcalc;
-                /*
-                for(int k = 0; k < 5; k++) {
-                    
-                    if(abs(deltaEcalc - (deltaE.data[k])) <= EPS) {
-                        this->E_tot = this->E_tot - deltaE.data[k];
-                    }
-                }
-                */
             }
             else {
-                //cout << "2" << endl;
+                double prob = exp(-deltaEcalc/T); //probability for a flip
                 double r = one_dis(gen);
-                for(int j = 0; j < 5; j++) {
-                    if(abs(deltaEcalc - (deltaE.data[j])) <= EPS) {
-                        if(r <= W.w[j]) {
-                            lattice[index[i].first][index[i].second] *= -1;
-                            //this->E_tot = this->E_tot - deltaE.data[j];
-                            E += deltaEcalc;
-                        }
-                    }
+                if(r <= prob){
+                    cout << r << endl;
+                    lattice[index[i].first][index[i].second] *= -1;
+                    E += deltaEcalc;
                 }
             }
-            
-            cout << E << endl;
+            //cout << "i: " << i << endl;
+            //cout << this->lattice[0][0] << this->lattice[1][0] << endl;
+            //cout << this->lattice[0][1] << this->lattice[1][1] << endl;
+            //cout << lattice[index[i].first][index[i].second] << endl;
+            this->avg_E += E;
+            this->avg_E2 += E*E;
+            //cout << i << " " << lattice[index[i].first][index[i].second] << endl;
         }
     }
-    //cout << E << endl;
-    this->avg = E/cycles;
+    this->E_tot = E_tot + E; 
+    this->avg_E = avg_E/((double) cycles*N2*N2);
+    this->avg_E2 = avg_E2/((double) cycles*N2*N2);
+    //cout << this->lattice[0][0] << this->lattice[1][0] << endl;
+    //cout << this->lattice[0][1] << this->lattice[1][1] << endl;
 };
+
+void Ising::SpesificHeat() {
+    //cout << avg_E << " " << avg_E2 << endl;
+    this->sigma_E = avg_E2-(avg_E*avg_E);
+    this->C_v = sigma_E/this->T;
+}
