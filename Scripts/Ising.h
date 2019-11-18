@@ -3,7 +3,6 @@
 
 class Ising {
     private:
-        void CreateLattice(const int);
         int ** lattice;
         int N;
         double J;
@@ -19,6 +18,7 @@ class Ising {
         double X;
         double sigma_E;
         double sigma_M;
+        double Z;
         Ising();
         Ising(int N);
         ~Ising();
