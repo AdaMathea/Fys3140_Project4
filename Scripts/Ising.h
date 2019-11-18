@@ -25,6 +25,9 @@ class Ising {
         void Metropolis(int);
         void SpesificHeat();
         void Susceptibility();
+        /*void MeanEnergy();
+        void MeanMagnetization();
+        void Susceptibility();*/
 };
 
 #endif //ISING_H
