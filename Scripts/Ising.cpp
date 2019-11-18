@@ -31,6 +31,7 @@ void Ising::CreateLattice(const int N) {
     uniform_int_distribution<int> dis(0, 1);
     
     this->N = N;
+    this->J = 1;
     this->lattice = new int*[N];
     for(int i = 0; i < N; i++){
         this->lattice[i] = new int[N];
@@ -100,6 +101,7 @@ void Ising::Metropolis(int cycles) {
                 double prob = exp(-deltaEcalc/T); //probability for a flip
                 double r = one_dis(gen);
                 if(r <= prob){
+                    //cout << r << endl;
                     lattice[index[i].first][index[i].second] *= -1;
                     E += (double) deltaEcalc;
                     M += (double) 2*lattice[index[i].first][index[i].second];
