@@ -12,6 +12,7 @@ class Ising {
         double avg_E2;
         double avg_M;
         double avg_M2;
+        double avg_M_abs;
         double T;
         double E_tot;
         double C_v;
@@ -21,7 +22,7 @@ class Ising {
         Ising();
         Ising(int N);
         ~Ising();
-        double TotalEnergy(double);
+        void TotalEnergy(double);
         void Metropolis(int);
         void SpesificHeat();
         void Susceptibility();

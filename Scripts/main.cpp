@@ -14,9 +14,8 @@ int main()
    cout << "total energy now: " << Is.E_tot << " J" << endl;
    cout << "avg_E: " << Is.avg_E << " J" << endl;
    cout << "avg_M: " << Is.avg_M << " J" << endl;
-   Is.SpesificHeat();
+   cout << "avg_M_abs: " << Is.avg_M_abs << " J" << endl;
    cout << "Cv: " << Is.C_v << " enhet" << endl;
-   Is.Susceptibility();
    cout << "X: " << Is.X << " enhet" << endl;
    return 0; 
 }
