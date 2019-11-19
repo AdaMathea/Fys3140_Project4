@@ -16,6 +16,7 @@ Xlist  = [[], [], [], []]
 counter = -1
 
 with open(filnavn, "r") as infile:
+    infile.readline()
     for line in infile:
         if line.split() == []:
             counter += 1
@@ -26,6 +27,7 @@ with open(filnavn, "r") as infile:
             Cvlist[counter].append(eval(Cv))
             Mlist[counter].append(eval(M))
             Xlist[counter].append(eval(X))
+
 
 Liste = [["<E(T)>", Elist], ["Cv", Cvlist], ["<|M|>", Mlist], ["X", Xlist]]
 for i in range(len(Liste)):

@@ -1,5 +1,4 @@
 #include <iostream>
-#include <fstream>
 #include <Ising.h>
 #include <string>
 #include <fstream>
@@ -31,7 +30,7 @@ int main()
         Is.avg_M_abs << " " << Is.C_v << " " << Is.X << endl;
     }
     myfile.close();
-    /*
+
     //Prints some of our end results
     cout << "total energy now: " << Is.E_tot << " J" << endl;
     cout << "avg_E: " << Is.avg_E << " J" << endl;
@@ -39,72 +38,66 @@ int main()
     cout << "avg_M_abs: " << Is.avg_M_abs << " J" << endl;
     cout << "Cv: " << Is.C_v << " enhet" << endl;
     cout << "X: " << Is.X << " enhet" << endl;
-    */
-//Torstein sitt
-/*
-    Is.Metropolis(10);
-    cout << "total energy now: " << Is.E_tot << " J" << endl;
-    cout << "avg_E: " << Is.avg_E << " J" << endl;
-    cout << "avg_M: " << Is.avg_M << " J" << endl;
-    cout << "Cv: " << Is.C_v << " enhet" << endl;
-    cout << "X: " << Is.X << " enhet" << endl;
-    */
 
-    double dT = 0.01;
+
+    // Runs class for 40 x 40 lattice, T = [2.0, 2.3] and J = 1
+    double dT = 0.01;   // Defines stepsize for the temperature
     int L = 40;
+    double T_start = 2.0;   // start of temperature interval
+    double T_slutt = 2.3;   // end of temperature interval
 
-    ofstream myfile;
-    myfile.open("4e.txt");
+    ofstream myefile;
+    myefile.open("4e.txt");
+    myefile << "  T     <E>     Cv        <|M|>       X" << endl;
 
-    Ising Isi = Ising(L);
-    Isi.T = 2.0;
+    Ising Isi = Ising(L);   // load Ising class
+    Isi.T = T_start;        // initialises
     Isi.TotalEnergy(1);
-    for (int i = 0; i <= (2.3 - 2.0) / dT + 1; i++)
+    for (int i = 0; i <= (T_slutt - T_start) / dT + 1; i++) // loops over T, calculates values and prints values to file
     {
-        Isi.T = 2.0 + dT * i;
         Isi.Metropolis(10000);
-        cout << "T: " << Isi.T << " K " << " Avg energy: " << Isi.avg_E << " J " << " Cv: " << Isi.C_v << " J " << " avg_M_abs: " << Isi.avg_M_abs << " J " << " X: " << Isi.X << " enhet" << endl;
-        myfile << Isi.T << "  " << Isi.avg_E << "  " << Isi.C_v << "  " << Isi.avg_M_abs << "  " << Isi.X << endl;
+        myefile << Isi.T << "  " << Isi.avg_E << "  " << Isi.C_v << "  " << Isi.avg_M_abs << "  " << Isi.X << endl;
+        Isi.T += dT;
     }
-    myfile << endl;
+    myefile << endl;
 
+    // Runs class for 60 x 60 lattice, T = [2.0, 2.3] and J = 1
     Isi.CreateLattice(L + 20);
-    Isi.T = 2.0;
+    Isi.T = T_start;
     Isi.TotalEnergy(1);
-    for (int i = 0; i <= (2.3 - 2.0) / dT + 1; i++)
+    for (int i = 0; i <= (T_slutt - T_start) / dT + 1; i++)
     {
-        Isi.T = 2.0 + dT * i;
         Isi.Metropolis(10000);
-        cout << "T: " << Isi.T << " K " << " Avg energy: " << Isi.avg_E << " J " << " Cv: " << Isi.C_v << " J " << " avg_M_abs: " << Isi.avg_M_abs << " J " << " X: " << Isi.X << " enhet" << endl;
-        myfile << Isi.T << "  " << Isi.avg_E << "  " << Isi.C_v << "  " << Isi.avg_M_abs << "  " << Isi.X << endl;
+        myefile << Isi.T << "  " << Isi.avg_E << "  " << Isi.C_v << "  " << Isi.avg_M_abs << "  " << Isi.X << endl;
+        Isi.T += dT;
     }
-    myfile << endl;
+    myefile << endl;
 
+    // Runs class for 80 x 80 lattice, T = [2.0, 2.3] and J = 1
     Isi.CreateLattice(L + 40);
-    Isi.T = 2.0;
+    Isi.T = T_start;
     Isi.TotalEnergy(1);
-    for (int i = 0; i <= (2.3 - 2.0) / dT + 1; i++)
+    for (int i = 0; i <= (T_slutt - T_start) / dT + 1; i++)
     {
-        Isi.T = 2.0 + dT * i;
         Isi.Metropolis(10000);
-        cout << "T: " << Isi.T << " K " << " Avg energy: " << Isi.avg_E << " J " << " Cv: " << Isi.C_v << " J " << " avg_M_abs: " << Isi.avg_M_abs << " J " << " X: " << Isi.X << " enhet" << endl;
-        myfile << Isi.T << "  " << Isi.avg_E << "  " << Isi.C_v << "  " << Isi.avg_M_abs << "  " << Isi.X << endl;
+        myefile << Isi.T << "  " << Isi.avg_E << "  " << Isi.C_v << "  " << Isi.avg_M_abs << "  " << Isi.X << endl;
+        Isi.T += dT;
     }
-    myfile << endl;
+    myefile << endl;
 
+    // Runs class for 100 x 100 lattice, T = [2.0, 2.3] and J = 1
     Isi.CreateLattice(L + 60);
-    Isi.T = 2.0;
+    Isi.T = T_start;
     Isi.TotalEnergy(1);
-    for (int i = 0; i <= (2.3 - 2.0) / dT + 1; i++)
+    for (int i = 0; i <= (T_slutt - T_start) / dT + 1; i++)
     {
-        Isi.T = 2.0 + dT * i;
         Isi.Metropolis(10000);
-        cout << "T: " << Isi.T << " K " << " Avg energy: " << Isi.avg_E << " J " << " Cv: " << Isi.C_v << " J " << " avg_M_abs: " << Isi.avg_M_abs << " J " << " X: " << Isi.X << " enhet" << endl;
-        myfile << Isi.T << "  " << Isi.avg_E << "  " << Isi.C_v << "  " << Isi.avg_M_abs << "  " << Isi.X << endl;
+        myefile << Isi.T << "  " << Isi.avg_E << "  " << Isi.C_v << "  " << Isi.avg_M_abs << "  " << Isi.X << endl;
+        Isi.T += dT;
     }
-    myfile << endl;
+    myefile << endl;
 
-    myfile.close();
+    myefile.close();
 
     return 0;
 }

@@ -29,7 +29,6 @@ class Ising {
         void CreateLattice(int);
         void TotalEnergy(double);
         void Metropolis(int);
-        void CreateLattice(int);
 };
 
 #endif //ISING_H
