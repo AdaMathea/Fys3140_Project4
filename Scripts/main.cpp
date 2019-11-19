@@ -21,7 +21,6 @@ int main()
     Is.Metropolis(10);
     cout << "total energy now: " << Is.E_tot << " J" << endl;
     cout << "avg energy: " << Is.avg_E << " J" << endl;
-    Is.SpesificHeat();
     cout << "Cv: " << Is.C_v << " J" << endl;
 
     Ising Isi = Ising(40);
@@ -34,7 +33,6 @@ int main()
     {
         Isi.T = 2.0 + 0.05 * i;
         Isi.Metropolis(10);
-        Isi.SpesificHeat();
         cout << "T: " << Isi.T << " K " << " Avg energy: " << Isi.avg_E << " J " << " Cv: " << Isi.C_v << " J" << endl;
     }
     return 0;
