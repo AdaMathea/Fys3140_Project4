@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <Ising.h>
 #include <string>
 #include <fstream>
@@ -47,18 +48,63 @@ int main()
     cout << "avg_M: " << Is.avg_M << " J" << endl;
     cout << "Cv: " << Is.C_v << " enhet" << endl;
     cout << "X: " << Is.X << " enhet" << endl;
+    */
 
+    double dT = 0.01;
     int L = 40;
+
+    ofstream myfile;
+    myfile.open("4e.txt");
+
     Ising Isi = Ising(L);
     Isi.T = 2.0;
-    Is.TotalEnergy(1);
-    for (int i = 0; i <= 6; i++)
+    Isi.TotalEnergy(1);
+    for (int i = 0; i <= (2.3 - 2.0) / dT + 1; i++)
     {
-        //Isi.CreateLattice(L); Unodvendig? Lages i Ising(L)
-        Isi.T = 2.0 + 0.05 * i;
+        Isi.T = 2.0 + dT * i;
         Isi.Metropolis(10000);
-        cout << "T: " << Isi.T << " K " << " Avg energy: " << Isi.avg_E << " J " << " Cv: " << Isi.C_v << " J " << " avg_M: " << Is.avg_M << " J " << " X: " << Is.X << " enhet" << endl;
+        cout << "T: " << Isi.T << " K " << " Avg energy: " << Isi.avg_E << " J " << " Cv: " << Isi.C_v << " J " << " avg_M_abs: " << Isi.avg_M_abs << " J " << " X: " << Isi.X << " enhet" << endl;
+        myfile << Isi.T << "  " << Isi.avg_E << "  " << Isi.C_v << "  " << Isi.avg_M_abs << "  " << Isi.X << endl;
     }
-*/
+    myfile << endl;
+
+    Isi.CreateLattice(L + 20);
+    Isi.T = 2.0;
+    Isi.TotalEnergy(1);
+    for (int i = 0; i <= (2.3 - 2.0) / dT + 1; i++)
+    {
+        Isi.T = 2.0 + dT * i;
+        Isi.Metropolis(10000);
+        cout << "T: " << Isi.T << " K " << " Avg energy: " << Isi.avg_E << " J " << " Cv: " << Isi.C_v << " J " << " avg_M_abs: " << Isi.avg_M_abs << " J " << " X: " << Isi.X << " enhet" << endl;
+        myfile << Isi.T << "  " << Isi.avg_E << "  " << Isi.C_v << "  " << Isi.avg_M_abs << "  " << Isi.X << endl;
+    }
+    myfile << endl;
+
+    Isi.CreateLattice(L + 40);
+    Isi.T = 2.0;
+    Isi.TotalEnergy(1);
+    for (int i = 0; i <= (2.3 - 2.0) / dT + 1; i++)
+    {
+        Isi.T = 2.0 + dT * i;
+        Isi.Metropolis(10000);
+        cout << "T: " << Isi.T << " K " << " Avg energy: " << Isi.avg_E << " J " << " Cv: " << Isi.C_v << " J " << " avg_M_abs: " << Isi.avg_M_abs << " J " << " X: " << Isi.X << " enhet" << endl;
+        myfile << Isi.T << "  " << Isi.avg_E << "  " << Isi.C_v << "  " << Isi.avg_M_abs << "  " << Isi.X << endl;
+    }
+    myfile << endl;
+
+    Isi.CreateLattice(L + 60);
+    Isi.T = 2.0;
+    Isi.TotalEnergy(1);
+    for (int i = 0; i <= (2.3 - 2.0) / dT + 1; i++)
+    {
+        Isi.T = 2.0 + dT * i;
+        Isi.Metropolis(10000);
+        cout << "T: " << Isi.T << " K " << " Avg energy: " << Isi.avg_E << " J " << " Cv: " << Isi.C_v << " J " << " avg_M_abs: " << Isi.avg_M_abs << " J " << " X: " << Isi.X << " enhet" << endl;
+        myfile << Isi.T << "  " << Isi.avg_E << "  " << Isi.C_v << "  " << Isi.avg_M_abs << "  " << Isi.X << endl;
+    }
+    myfile << endl;
+
+    myfile.close();
+
     return 0;
 }

@@ -26,6 +26,7 @@ class Ising {
         Ising();
         Ising(int N);
         ~Ising();
+        void CreateLattice(int);
         void TotalEnergy(double);
         void Metropolis(int);
         void CreateLattice(int);
