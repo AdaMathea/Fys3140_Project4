@@ -138,11 +138,12 @@ void Ising::Metropolis(int cycles) {
 };
 /*
 void Ising::SpesificHeat() {
-    
+    this->sigma_E = avg_E2 - (avg_E*avg_E);
+    this->C_v = sigma_E/this->T;
 }
 
 void Ising::Susceptibility() {
-    this->sigma_M = (avg_M2-(avg_M*avg_M))/(this->N*this->N*this->N*this->N);;
+    this->sigma_M = avg_M2 - (avg_M*avg_M);
     this->X = sigma_M/this->T;
 }
 */
