@@ -1,5 +1,9 @@
 #include <iostream>
 #include <Ising.h>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -13,9 +17,20 @@ int main()
     //Prints total energy in the start
     cout << "total energy: " << Is.E_tot << " J" << endl;
 
-    //Runs Monte Carlo with 100 000 cycles
-    Is.Metropolis(20);
-
+    int val = 20;
+    //Write to file
+    ostringstream oss;
+    oss << "MC_tot_" << val << ".txt";
+    string filename = oss.str();
+    ofstream myfile(filename, ofstream::out);
+    for (int n = 1; n <= 10000; n++) {
+        //Runs Monte Carlo with 100 000 cycles
+        Is.Metropolis(val);
+        myfile << Is.avg_E << " " << Is.avg_M << " " << 
+        Is.avg_M_abs << " " << Is.C_v << " " << Is.X << endl;
+    }
+    myfile.close();
+    /*
     //Prints some of our end results
     cout << "total energy now: " << Is.E_tot << " J" << endl;
     cout << "avg_E: " << Is.avg_E << " J" << endl;
@@ -23,6 +38,7 @@ int main()
     cout << "avg_M_abs: " << Is.avg_M_abs << " J" << endl;
     cout << "Cv: " << Is.C_v << " enhet" << endl;
     cout << "X: " << Is.X << " enhet" << endl;
+    */
 //Torstein sitt
 /*
     Is.Metropolis(10);

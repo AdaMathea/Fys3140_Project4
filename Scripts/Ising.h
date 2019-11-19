@@ -4,10 +4,10 @@
 class Ising {
     private:
         int ** lattice;
-        int N;
         double J;
     public:
         //Values
+        int N;
         double avg_E;
         double avg_E2;
         double avg_M;

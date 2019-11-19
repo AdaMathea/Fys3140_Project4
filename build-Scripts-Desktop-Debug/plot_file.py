@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 x = []
 
-infile = open('MC_20.txt', 'r')
+infile = open('MC_tot_20.txt', 'r')
 #names = infile.readline().split()
 
 for line in infile.readlines():
@@ -12,16 +12,12 @@ for line in infile.readlines():
 
 infile.close()
 
-a,b,c,d,e,f,g = zip(*x)
-ax = plt.subplot(111)
-box = ax.get_position()
-ax.set_position([box.x0, box.y0 + box.height * 0.1,
-                 box.width, box.height * 0.9])
+a,b,c,d,e = zip(*x)
 
 #(exec(f"plt.plot(range(len(x)), {letter}, label = names[{index}])") for letter, index in zip([a,b,c,d,e], range(5)))
 
-plt.plot(g, b, label = "<M>")
-plt.plot(g, c, label = "<|M|>")
+plt.plot(range(len(x)), e, label = "E")
+#plt.plot(g, c, label = "<|M|>")
 """
 plt.plot(range(len(x)), a, "--", label = names[0])
 plt.plot(range(len(x)), b, "--", label = names[1])
