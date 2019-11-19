@@ -53,12 +53,20 @@ void Ising::TotalEnergy(double J) {
     this->J = J;
     int N = this->N;
     int E_step = 0;
+    int M_step = 0;
+    for(int i = 0; i < N; i++) {
+        for(int j = 0; j < N; j++) {
+            if (this->T < 1.5) lattice[i][j] = 1;
+            M_step += lattice[i][j];
+        }
+    }
     for(int i = 0; i < N; i++) {
         for(int j = 0; j < N; j++) {
             E_step += lattice[i][j]*lattice[i][periodic(j,N,-1)];
             E_step += lattice[i][j]*lattice[periodic(i,N,-1)][j];
         }
     }
+    this->M_tot = M_step;
     this->E_tot = E_step*(-J);
 }
 
@@ -68,7 +76,6 @@ void Ising::Metropolis(int cycles) {
     this->avg_M = 0;
     this->avg_M2 = 0;
     this->avg_M_abs = 0;
-    
     random_device rd;  //Will be used to obtain a seed for the random number engine
     mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
     uniform_int_distribution<int> dis(0, this->N-1);
@@ -77,7 +84,7 @@ void Ising::Metropolis(int cycles) {
     //Sets initial values
     int N = this->N;
     double E = this->E_tot;
-    double M = 0;
+    double M = this->M_tot;
     int J = this->J;
     int T = this->T;
     int N2 = N*N;

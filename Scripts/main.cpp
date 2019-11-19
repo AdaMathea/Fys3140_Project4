@@ -17,13 +17,13 @@ int main()
     //Prints total energy in the start
     cout << "total energy: " << Is.E_tot << " J" << endl;
 
-    int val = 20;
+    int val = 100000;
     //Write to file
     ostringstream oss;
     oss << "MC_tot_" << val << ".txt";
     string filename = oss.str();
     ofstream myfile(filename, ofstream::out);
-    for (int n = 1; n <= 10000; n++) {
+    for (int n = 1; n <= 100; n++) {
         //Runs Monte Carlo with 100 000 cycles
         Is.Metropolis(val);
         myfile << Is.avg_E << " " << Is.avg_M << " " << 

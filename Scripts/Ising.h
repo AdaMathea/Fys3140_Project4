@@ -15,6 +15,7 @@ class Ising {
         double avg_M_abs;
         double T;
         double E_tot;
+        double M_tot;
         double C_v;
         double X;
         double sigma_E;
