@@ -7,6 +7,7 @@ class Ising {
         int N;
         double J;
     public:
+        //Values
         double avg_E;
         double avg_E2;
         double avg_M;
@@ -19,16 +20,14 @@ class Ising {
         double sigma_E;
         double sigma_M;
         double Z;
+
+        //Functions
         Ising();
         Ising(int N);
         ~Ising();
         void TotalEnergy(double);
         void Metropolis(int);
-        void SpesificHeat();
-        void Susceptibility();
-        /*void MeanEnergy();
-        void MeanMagnetization();
-        void Susceptibility();*/
+        void CreateLattice(int);
 };
 
 #endif //ISING_H

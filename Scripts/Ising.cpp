@@ -3,17 +3,19 @@
 #include <utility>
 
 #include <Ising.h>
-double EPS = 0.0001;
 using namespace std;
 
+//Constructor
 Ising::Ising(){
     this->CreateLattice(5);
 }
 
+//Constructor with input
 Ising::Ising(int N) {
     this->CreateLattice(N);
 }
 
+//Deconstructor
 Ising::~Ising() {
     for(int i = 0; i < this->N; i++) {
         delete this->lattice[i];
@@ -21,6 +23,7 @@ Ising::~Ising() {
     delete this->lattice;
 }
 
+//Boundary conditions
 inline int periodic(int i, int limit, int add) {
     return (i+limit+add) % (limit);
 }
@@ -37,11 +40,9 @@ void Ising::CreateLattice(const int N) {
         this->lattice[i] = new int[N];
         for(int j = 0; j < N; j++){
             this->lattice[i][j] = dis(gen)*2-1;
-            //this->lattice[i][j] = 1;
+            //this->lattice[i][j] = 1; If you want to make a specific lattice
         }
     }
-    //cout << this->lattice[0][0] << this->lattice[1][0] << endl;
-    //cout << this->lattice[0][1] << this->lattice[1][1] << endl;
 }
 
 //Initialice total energy
@@ -64,6 +65,7 @@ void Ising::Metropolis(int cycles) {
     uniform_int_distribution<int> dis(0, this->N-1);
     uniform_real_distribution<double> one_dis(0.0, 1.0);
     
+    //Sets initial values
     int N = this->N;
     double E = this->E_tot;
     double M = 0;
@@ -71,6 +73,7 @@ void Ising::Metropolis(int cycles) {
     int T = this->T;
     int N2 = N*N;
     
+    //Chooses random points to use in our Monte Carlo method
     pair<int, int> index[N2];
     for(int i = 0; i < N2; i++) {
         int a = dis(gen);
@@ -79,9 +82,9 @@ void Ising::Metropolis(int cycles) {
     }
 
     for(int l = 0; l < cycles; l++) {
-        //print("l: " << l)
+        //Monte Carlo cycles
         for(int i = 0; i < N2; i++) {
-            //cout << E << endl;
+            //Calculates the difference between the previous and new energy
             double deltaEcalc = 2*J*
             lattice[index[i].first][index[i].second]*(
                 lattice[index[i].first][periodic(index[i].second,N,-1)]+
@@ -91,30 +94,29 @@ void Ising::Metropolis(int cycles) {
             );
 
             if(deltaEcalc <= 0) {
-                //cout << "1" << endl;
                 lattice[index[i].first][index[i].second] *= -1;
                 E += (double) deltaEcalc;
                 M += (double) 2*lattice[index[i].first][index[i].second];
             }
             else {
-                //cout << "1" << endl;
                 double prob = exp(-deltaEcalc/T); //probability for a flip
                 double r = one_dis(gen);
                 if(r <= prob){
-                    //cout << r << endl;
+                    //Runs based on a probability
                     lattice[index[i].first][index[i].second] *= -1;
                     E += (double) deltaEcalc;
                     M += (double) 2*lattice[index[i].first][index[i].second];
                 }
             }
         }
-        //cout << "M" << M << endl;
+        //Summing up values
         this->avg_E += E;
         this->avg_E2 += E*E;
         this->avg_M += M;
         this->avg_M2 += M*M;
         this->avg_M_abs += abs(M);
     }
+    //Total energy in the end:
     this->E_tot = E; 
 
     // Normalizes by cycless
@@ -134,16 +136,4 @@ void Ising::Metropolis(int cycles) {
     this->avg_M = avg_M/((double) N2);
     this->avg_M2 = avg_M2/((double) N2);
     this->avg_M_abs = avg_M_abs/((double) N2);
-    //cout << avg_E2 << endl;
 };
-/*
-void Ising::SpesificHeat() {
-    this->sigma_E = avg_E2 - (avg_E*avg_E);
-    this->C_v = sigma_E/this->T;
-}
-
-void Ising::Susceptibility() {
-    this->sigma_M = avg_M2 - (avg_M*avg_M);
-    this->X = sigma_M/this->T;
-}
-*/
