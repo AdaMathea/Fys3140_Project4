@@ -1,6 +1,9 @@
 #include <iostream>
 #include <random>
 #include <utility>
+#include <string>
+#include <fstream>
+#include <sstream>
 
 #include <Ising.h>
 using namespace std;
@@ -80,6 +83,13 @@ void Ising::Metropolis(int cycles) {
         int b = dis(gen);
         index[i] = {a, b};
     }
+    
+    //Write to file
+    ostringstream oss;
+    oss << "MC_" << cycles << ".txt";
+    string filename = oss.str();
+    ofstream myfile(filename, ofstream::out);
+    
 
     for(int l = 0; l < cycles; l++) {
         //Monte Carlo cycles
@@ -115,7 +125,13 @@ void Ising::Metropolis(int cycles) {
         this->avg_M += M;
         this->avg_M2 += M*M;
         this->avg_M_abs += abs(M);
+
+        myfile << this->avg_E/double(l*N2) << " " << this->avg_M/double(l*N2) << " " << 
+        this->avg_M_abs/double(l*N2) << " " << E << " " <<
+        (this->avg_E2-(this->avg_E*this->avg_E))/(double(N2)*this->T*this->T*l) << " " << 
+        (this->avg_M2-(this->avg_M*this->avg_M))/(double(N2)*this->T*l) << " " << l << endl;
     }
+    myfile.close();
     //Total energy in the end:
     this->E_tot = E; 
 

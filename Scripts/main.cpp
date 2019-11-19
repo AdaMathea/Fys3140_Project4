@@ -14,7 +14,7 @@ int main()
     cout << "total energy: " << Is.E_tot << " J" << endl;
 
     //Runs Monte Carlo with 100 000 cycles
-    Is.Metropolis(100000);
+    Is.Metropolis(20);
 
     //Prints some of our end results
     cout << "total energy now: " << Is.E_tot << " J" << endl;
@@ -23,7 +23,8 @@ int main()
     cout << "avg_M_abs: " << Is.avg_M_abs << " J" << endl;
     cout << "Cv: " << Is.C_v << " enhet" << endl;
     cout << "X: " << Is.X << " enhet" << endl;
- 
+//Torstein sitt
+/*
     Is.Metropolis(10);
     cout << "total energy now: " << Is.E_tot << " J" << endl;
     cout << "avg_E: " << Is.avg_E << " J" << endl;
@@ -42,6 +43,6 @@ int main()
         Isi.Metropolis(10000);
         cout << "T: " << Isi.T << " K " << " Avg energy: " << Isi.avg_E << " J " << " Cv: " << Isi.C_v << " J " << " avg_M: " << Is.avg_M << " J " << " X: " << Is.X << " enhet" << endl;
     }
-
+*/
     return 0;
 }
